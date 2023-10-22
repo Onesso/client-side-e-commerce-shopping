@@ -1,5 +1,7 @@
 import { useState } from "react";
-import Jumbo from "../components/cards/Jumbo";
+import Jumbo from "../../components/cards/Jumbo";
+import axios from "axios";
+import toast, { Toaster } from "react-hot-toast"; // this library gives notifications resulting from the api calls made by axio library
 
 export default function Register() {
   //useState - it is a react hook that let me add a state variable in my component -- state lets a component remember(store) information like userr input
@@ -7,12 +9,29 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  // i don't know what is wrong with my machine, .env is not
+  //for standard protocal one domain can not make request to anothe domain
+
+  const REACT_APP_API = "http://localhost:8000/api";
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      console.log(name, email, password);
+      const { data } = await axios.post(`${REACT_APP_API}/register`, {
+        name,
+        email,
+        password,
+      });
+      // the question mark is a preliminary precaution when the is issue with server the error property will be assecced from data only if the data exist
+      console.log(data);
+      if (data?.error) {
+        toast.error(data.error);
+      } else {
+        toast.success("Registration Succeful");
+      }
     } catch (err) {
       console.log(err);
+      toast.error("Registration failed. TRY AGAIN");
     }
   };
 
@@ -20,6 +39,7 @@ export default function Register() {
     <>
       <div>
         <Jumbo title="Register" />
+        <Toaster />
         <div className="container mt-5">
           <div className="row">
             <div className="col-md-6 offset-md-3">
@@ -31,7 +51,7 @@ export default function Register() {
                   placeholder="Enter Name Here"
                   autoFocus
                   value={name}
-                  onChange={(event) => setName(event.target.value)}
+                  onChange={(e) => setName(e.target.value)}
                 />
 
                 <input
@@ -39,7 +59,7 @@ export default function Register() {
                   className="form-control mb-4 p-2"
                   placeholder="name@email.com"
                   value={email}
-                  onChange={(event) => setEmail(event.target.value)}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
 
                 <input
@@ -47,7 +67,7 @@ export default function Register() {
                   className="form-control mb-4 p-2"
                   placeholder="Enter password"
                   value={password}
-                  onChange={(event) => setPassword(event.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
 
                 <button className="btn btn-primary" type="submit">

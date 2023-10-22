@@ -8,14 +8,14 @@ import {
 } from "react-router-dom";
 import Menu from "./components/nav/menu.jsx";
 import Home from "./pages/Home.jsx";
-import Register from "./pages/Register.jsx";
-import Login from "./pages/Login.jsx";
+import Login from "./pages/auth/Login.jsx";
+import Register from "./pages/auth/Register.jsx";
 
 export default function App() {
   return (
     <>
       <BrowserRouter>
-      <Menu />
+        <Menu />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/Register" element={<Register />} />
